@@ -1,16 +1,15 @@
 module Main exposing (..)
 
+import Data
 import Dict
 import Html exposing (Html, div, img, text)
 import Html.Attributes exposing (classList, src)
 import Html.Events
 import Http
 import Poem exposing (Poem)
-import ProcessText
 import Task exposing (Task)
 
 
---- GETTING DATA ---
 ---- MODEL ----
 
 
@@ -24,7 +23,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( { poem = Poem.poemFromText ProcessText.dummyText
+    ( { poem = Poem.poemFromText Data.rawText
       , currentYear = "1622"
       }
     , Cmd.none
@@ -41,17 +40,12 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        d =
-            Debug.log "msg" msg
-    in
     case msg of
         UpdateYear currentYear ->
             ( { model | currentYear = currentYear }, Cmd.none )
 
 
 
---TODO: handle error
 ---- VIEW ----
 
 
@@ -77,10 +71,6 @@ slider currentYear =
         []
 
 
-
--- <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-
-
 poemView : Year -> Poem -> Html msg
 poemView currentYear poem =
     div [] (List.map (lineView currentYear) poem)
@@ -95,7 +85,7 @@ wordView : Year -> String -> Html msg
 wordView currentYear word =
     let
         firstYearForWord =
-            Dict.get (String.toLower word) ProcessText.yearDictionary
+            Dict.get (String.toLower word) Data.yearDictionary
                 |> Maybe.withDefault "1500"
     in
     Html.span [ classList [ ( "invisible", firstYearForWord > currentYear ) ] ]
