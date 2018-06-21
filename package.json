@@ -1,0 +1,26 @@
+{
+  "name": "text-time-viz",
+  "version": "1.0.0",
+  "description": "pure awesomeness",
+  "main": "main.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "ag -l | entr -c elm-make elm/Main.elm --output=public/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sarahwelzgeselowitz/text-time-viz.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sarahwelzgeselowitz/text-time-viz/issues"
+  },
+  "homepage": "https://github.com/sarahwelzgeselowitz/text-time-viz#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
