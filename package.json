@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "ag -l | entr -c elm-make elm/Main.elm --output=public/bundle.js"
+    "watch": "ag -l | entr -c elm-make elm/Main.elm --output=public/bundle.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
