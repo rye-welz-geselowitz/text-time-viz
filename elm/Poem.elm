@@ -22,37 +22,21 @@ toQueryStrings =
     uniqueWords >> chunkEvery 3 >> List.map wordsToQueryString
 
 
-
---     -- get unique words
---     -- chunk
---     -- convert chunk to query string
-
-
 wordsToQueryString : List Word -> String
 wordsToQueryString words =
     let
         base =
             "http://phrasefinder.io/search?corpus=eng-gb&query="
     in
-    base ++ String.join "/" words
+        base ++ String.join "/" words
 
 
 chunkEvery : Int -> List a -> List (List a)
-chunkEvery n =
-    List.foldl
-        (\val acc ->
-            case acc of
-                [] ->
-                    [ val ] :: acc
-
-                x :: xs ->
-                    if List.length x == n then
-                        [ val ] :: acc
-                    else
-                        (x ++ [ val ]) :: xs
-        )
+chunkEvery n list =
+    if list == [] then
         []
-        >> List.reverse
+    else
+        (List.take n list) :: (chunkEvery n (List.drop n list))
 
 
 uniqueWords : Poem -> List Word
