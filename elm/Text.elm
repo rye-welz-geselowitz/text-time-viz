@@ -1,15 +1,15 @@
-module Poem exposing (Poem, chunkEvery, poemFromText, toQueryStrings, wordsToQueryString)
+module Text exposing (Text, chunkEvery, fromRawText, toQueryStrings, wordsToQueryString)
 
 import Json.Decode as JD
 import Regex
 import Set exposing (Set)
 
 
-type alias Poem =
-    List Line
+type alias Text =
+    List Paragraph
 
 
-type alias Line =
+type alias Paragraph =
     List String
 
 
@@ -17,7 +17,7 @@ type alias Word =
     String
 
 
-toQueryStrings : Poem -> List String
+toQueryStrings : Text -> List String
 toQueryStrings =
     uniqueWords >> chunkEvery 3 >> List.map wordsToQueryString
 
@@ -39,7 +39,7 @@ chunkEvery n list =
         (List.take n list) :: (chunkEvery n (List.drop n list))
 
 
-uniqueWords : Poem -> List Word
+uniqueWords : Text -> List Word
 uniqueWords =
     List.concat >> unique
 
@@ -55,15 +55,13 @@ dePunctuate =
 
 
 split : String -> List String
-split rawText =
-    Regex.split Regex.All (Regex.regex "\\s|\n") rawText
+split =
+    Regex.split Regex.All (Regex.regex "\\s|\n")
 
 
-poemFromText : String -> Poem
-poemFromText text =
+fromRawText : String -> Text
+fromRawText text =
     dePunctuate text
         |> Regex.split Regex.All (Regex.regex "\n")
         |> List.map
-            (\line ->
-                Regex.split Regex.All (Regex.regex "\\s") line
-            )
+            (Regex.split Regex.All (Regex.regex "\\s"))

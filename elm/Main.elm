@@ -6,7 +6,7 @@ import Html exposing (Html, div, img, text)
 import Html.Attributes exposing (classList, src)
 import Html.Events
 import Http
-import Poem exposing (Poem)
+import Text exposing (Text)
 import Task exposing (Task)
 
 
@@ -18,12 +18,12 @@ type alias Year =
 
 
 type alias Model =
-    { poem : Poem, currentYear : Year }
+    { text : Text, currentYear : Year }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { poem = Poem.poemFromText Data.rawText
+    ( { text = Text.fromRawText Data.rawText
       , currentYear = "1622"
       }
     , Cmd.none
@@ -54,7 +54,7 @@ view model =
     div []
         [ Html.h1 [] [ text <| model.currentYear ]
         , slider model.currentYear
-        , poemView model.currentYear model.poem
+        , fullTextView model.currentYear model.text
         ]
 
 
@@ -71,14 +71,14 @@ slider currentYear =
         []
 
 
-poemView : Year -> Poem -> Html msg
-poemView currentYear poem =
-    div [] (List.map (lineView currentYear) poem)
+fullTextView : Year -> Text -> Html msg
+fullTextView currentYear text =
+    div [] (List.map (paragraphView currentYear) text)
 
 
-lineView : Year -> List String -> Html msg
-lineView currentYear line =
-    div [] <| List.map (wordView currentYear) line
+paragraphView : Year -> List String -> Html msg
+paragraphView currentYear paragraph =
+    div [] <| List.map (wordView currentYear) paragraph
 
 
 wordView : Year -> String -> Html msg
@@ -88,8 +88,8 @@ wordView currentYear word =
             Dict.get (String.toLower word) Data.yearDictionary
                 |> Maybe.withDefault "1500"
     in
-    Html.span [ classList [ ( "invisible", firstYearForWord > currentYear ) ] ]
-        [ text word ]
+        Html.span [ classList [ ( "invisible", firstYearForWord > currentYear ) ] ]
+            [ text word ]
 
 
 
