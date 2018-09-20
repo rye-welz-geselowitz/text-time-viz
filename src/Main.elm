@@ -8,6 +8,7 @@ import Html.Events
 import Http
 import Text exposing (Text)
 import Task exposing (Task)
+import Browser
 
 
 ---- MODEL ----
@@ -38,8 +39,8 @@ type Msg
     = UpdateYear String
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+update : Msg -> (Model, Cmd Msg) -> ( Model, Cmd Msg )
+update msg (model, cmd) =
     case msg of
         UpdateYear currentYear ->
             ( { model | currentYear = currentYear }, Cmd.none )
@@ -49,8 +50,8 @@ update msg model =
 ---- VIEW ----
 
 
-view : Model -> Html Msg
-view model =
+view : (Model, Cmd Msg) -> Html Msg
+view (model, cmd) =
     div []
         [ Html.h1 [] [ text <| model.currentYear ]
         , slider model.currentYear
@@ -96,11 +97,10 @@ wordView currentYear word =
 ---- PROGRAM ----
 
 
-main : Program Never Model Msg
+main : Program () ( Model, Cmd Msg ) Msg
 main =
-    Html.program
+    Browser.sandbox
         { view = view
         , init = init
         , update = update
-        , subscriptions = always Sub.none
         }

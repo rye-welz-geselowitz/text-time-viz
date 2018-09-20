@@ -15,9 +15,10 @@
     <title>Elm App</title>
 </head>
 <body>
+    <main></main>
     <script src='bundle.js'></script>
     <script>
-      Elm.Main.fullscreen();
+      Elm.Main.init({ node: document.querySelector('main') });
     </script>
     <noscript>
         You need to enable JavaScript to run this app.
