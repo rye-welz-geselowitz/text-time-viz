@@ -48,9 +48,9 @@ unique : List comparable -> List comparable
 unique =
     Set.fromList >> Set.toList
 
-userReplace : String -> (Regex.Match -> String) -> String -> String
-userReplace userRegex replacer string =
-  case Regex.fromString userRegex of
+replace : String -> (Regex.Match -> String) -> String -> String
+replace input replacer string =
+  case Regex.fromString input of
     Nothing ->
       string
 
@@ -59,23 +59,20 @@ userReplace userRegex replacer string =
 
 dePunctuate : String -> String
 dePunctuate =
-  userReplace "\\W[\\s\n]" (\_ -> "")
+  replace "\\W[\\s\n]" (\_ -> "")
 
+getRegex : String -> Regex.Regex
+getRegex =
+  Maybe.withDefault Regex.never <<
+    Regex.fromString
 
 space : Regex.Regex
 space =
-  Maybe.withDefault Regex.never <|
-    Regex.fromString "\\s|\n"
+  getRegex "\\s|\n"
 
 newLine : Regex.Regex
 newLine =
-  Maybe.withDefault Regex.never <|
-    Regex.fromString "\n"
-
-split : String -> List String
-split =
-    Regex.split space
-
+  getRegex "\n"
 
 fromRawText : String -> Text
 fromRawText text =
