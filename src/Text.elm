@@ -48,20 +48,35 @@ unique : List comparable -> List comparable
 unique =
     Set.fromList >> Set.toList
 
+replace : String -> (Regex.Match -> String) -> String -> String
+replace input replacer string =
+  case Regex.fromString input of
+    Nothing ->
+      string
+
+    Just regex ->
+      Regex.replace regex replacer string
 
 dePunctuate : String -> String
 dePunctuate =
-    Regex.replace Regex.All (Regex.regex "\\W[\\s\n]") (\_ -> " ")
+  replace "\\W[\\s\n]" (\_ -> "")
 
+getRegex : String -> Regex.Regex
+getRegex =
+  Maybe.withDefault Regex.never <<
+    Regex.fromString
 
-split : String -> List String
-split =
-    Regex.split Regex.All (Regex.regex "\\s|\n")
+space : Regex.Regex
+space =
+  getRegex "\\s|\n"
 
+newLine : Regex.Regex
+newLine =
+  getRegex "\n"
 
 fromRawText : String -> Text
 fromRawText text =
     dePunctuate text
-        |> Regex.split Regex.All (Regex.regex "\n")
+        |> Regex.split newLine
         |> List.map
-            (Regex.split Regex.All (Regex.regex "\\s"))
+            (Regex.split space)
